@@ -10,19 +10,19 @@ using std::cout;
 using std::string;
 
 bool isExpressionValid(const string& str) {
-    bool lastOperator = true;
+    bool lastOperator = false;
     int openBrackets = 0;
 
     for (size_t i = 0; i < str.size(); ++i) {
         char s = str[i];
         if (isdigit(s) || s == '.') {
             lastOperator = false;
-        } else if (s == '+' || s == '*' || s == '/' || s == '^') {
-            if (lastOperator) return false; 
-            lastOperator = true;
-        } else if (s == '-') {
-            if (!lastOperator && (i == 0 || str[i - 1] != '(')) {
-                lastOperator = true;
+        } else if (s == '+' || s == '-' || s == '*' || s == '/' || s == '^') {
+            if (lastOperator && s != '-') return false;
+            if (s == '-' && (i == 0 || str[i - 1] == '(' || !isdigit(str[i - 1]))) {
+                lastOperator = false; // '-' как знак числа
+            } else {
+                lastOperator = true; // '-' как оператор
             }
         } else if (s == '(') {
             ++openBrackets;
@@ -34,7 +34,7 @@ bool isExpressionValid(const string& str) {
             --openBrackets;
             lastOperator = false;
         } else if (!isspace(s)) {
-            return false;
+            return false; 
         }
     }
 
@@ -50,8 +50,9 @@ double Calculate(const string& str) {
         char s = str[i];
         if (isdigit(s) || s == '.') {
             temp += s;
-        } else if (s == '-' && (i == 0 || str[i - 1] == '(' || !isdigit(str[i - 1]) && str[i - 1] != ')')) {
-            temp += s; // Обработка отрицательного числа
+        } else if (s == '-' && (i == 0 || str[i - 1] == '(' || !isdigit(str[i - 1]))) {
+            // Обрабатываем отрицательное число
+            temp += s;
         } else if (s == '+' || s == '-' || s == '*' || s == '/' || s == '^') {
             if (!temp.empty()) {
                 numbers.push_back(std::stod(temp));
@@ -97,7 +98,7 @@ double Calculate(const string& str) {
 }
 
 double CalculateBrackets(string str) {
-    std::stack<size_t> brackets;
+    std::stack<size_t> brackets; 
 
     for (size_t i = 0; i < str.size(); ++i) {
         if (str[i] == '(') {
@@ -116,32 +117,12 @@ double CalculateBrackets(string str) {
         }
     }
 
-    size_t funcPos = str.find_first_of("abcdefghijklmnopqrstuvwxyz");
-    while (funcPos != string::npos) {
-        size_t endPos = funcPos;
-        while (endPos < str.size() && isalpha(str[endPos])) ++endPos;
-        string func = str.substr(funcPos, endPos - funcPos);
-
-        size_t openBracket = str.find('(', endPos);
-        if (openBracket == string::npos) throw std::runtime_error("Error: Missing '(' after function name!");
-
-        size_t closeBracket = str.find(')', openBracket);
-        if (closeBracket == string::npos) throw std::runtime_error("Error: Missing ')' after function argument!");
-
-        string argument = str.substr(openBracket + 1, closeBracket - openBracket - 1);
-        double argValue = CalculateBrackets(argument);
-        double funcResult = evaluateFunction(func, argValue);
-
-        str.replace(funcPos, closeBracket - funcPos + 1, std::to_string(funcResult));
-        funcPos = str.find_first_of("abcdefghijklmnopqrstuvwxyz");
-    }
-
     return Calculate(str);
 }
 
 int main() {
     cout << "========================\n";
-    cout << "    Calculator 2.0     \n";
+    cout << "    Calculator 2.1     \n";
     cout << "========================\n";
     cout << "Напишите выражение для расчёта или 'exit' для выхода.\n\n";
 
@@ -174,3 +155,4 @@ int main() {
     }
 
     return 0;
+}
