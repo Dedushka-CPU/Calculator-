@@ -6,45 +6,53 @@ using std::string;
 bool isExpressionValid(const string& str) {
     bool lastOperator = false;
     int openBrackets = 0;
-    bool lastPoint=false;
+    bool lastPoint = false;
+    int pointCount = 0;
+
     for (size_t i = 0; i < str.size(); ++i) {
         char s = str[i];
-        if(s==' ') {
+        if (s == ' ') {
             return false;
         }
         if (isdigit(s) || s == '.') {
-            if(s =='.' && lastPoint==true) {
+            if (s == '.' && lastPoint == true) {
+                return false; 
+            }
+            if (s == '.' && lastPoint == false) {
+                lastPoint = true;
+                ++pointCount; 
+            }
+            if (isdigit(s)) {
+                lastPoint = false;
+            }
+            if (pointCount > 1) { 
                 return false;
-            }
-            if(s=='.' && lastPoint==false) {
-                lastPoint=true;
-            }
-           
-            if(isdigit(s)) {
-                lastPoint=false;
             }
             lastOperator = false;
         } else if (s == '+' || s == '-' || s == '*' || s == '/' || s == '^') {
-            lastPoint=false;
+            lastPoint = false;
+            pointCount = 0; 
             if (lastOperator && s != '-') return false;
             if (s == '-' && (i == 0 || str[i - 1] == '(' || !isdigit(str[i - 1]))) {
                 lastOperator = false;
             } else {
-                lastOperator = true; 
+                lastOperator = true;
             }
         } else if (s == '(') {
-            lastPoint=false;
+            lastPoint = false;
+            pointCount = 0;
             ++openBrackets;
             lastOperator = true;
         } else if (s == ')') {
-            lastPoint=false;
+            lastPoint = false;
+            pointCount = 0; 
             if (openBrackets == 0 || lastOperator) {
                 return false;
             }
             --openBrackets;
             lastOperator = false;
         } else if (!isspace(s)) {
-            return false; 
+            return false;
         }
     }
 

@@ -3,7 +3,7 @@
 
 using std::cin;
 using std::cout;
-using std::string;1
+using std::string;
 
 int main() {
     cout << "========================\n";
