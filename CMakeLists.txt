@@ -3,6 +3,6 @@ project(TestDoctest)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(main main.cpp calc.cpp)
+add_executable(main main.cpp calculator_functions.cpp)
 
-add_executable(tests calc.cpp test.cpp)
+add_executable(tests calculator_functions.cpp test.cpp)

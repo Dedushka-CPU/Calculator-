@@ -1,6 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
-#include "calc.h"
+#include "calculator_h.h"
 
 TEST_SUITE("MATH") {
     TEST_CASE("TESTING ADDITION") {
@@ -40,7 +40,36 @@ TEST_SUITE("MATH") {
         CHECK_THROWS(CalculateBrackets("(1+2))")); 
         CHECK_THROWS(CalculateBrackets("((1+2)")); 
     }
-
+    TEST_CASE("TESTING isExpressionValid") {
+        REQUIRE(isExpressionValid("(1+2)*3") == true);
+        REQUIRE(isExpressionValid("((2+3)*2)") == true);
+        REQUIRE(isExpressionValid("(((4+5)*2)-3)") == true);
+        REQUIRE(isExpressionValid("1 + 2") == true);
+        REQUIRE(isExpressionValid("-1.5 * 2") == true);
+        REQUIRE(isExpressionValid("1 + x") == false);
+        REQUIRE(isExpressionValid("a * b") == false);
+        REQUIRE(isExpressionValid("(1 + 2a)") == false);
+        REQUIRE(isExpressionValid("2.5x + 3") == false);
+        REQUIRE(isExpressionValid("  1  +  -2  ") == true);
+        REQUIRE(isExpressionValid("0.0 / 1.0+ 1  +  -2 -1.5 * 2") == true);
+        REQUIRE(isExpressionValid("(-1+-2)*3") == true);
+        REQUIRE(isExpressionValid("(1+2))") == false);
+        REQUIRE(isExpressionValid("((1+2)") == false);
+        REQUIRE(isExpressionValid("1 +") == false);
+        REQUIRE(isExpressionValid("+ 2") == false);
+        REQUIRE(isExpressionValid("1.2.3") == false);
+        REQUIRE(isExpressionValid("1++2") == false);
+        REQUIRE(isExpressionValid("()") == false);
+        REQUIRE(isExpressionValid("(1 2)") == false);
+        REQUIRE(isExpressionValid("1 + - 2") == false);
+        REQUIRE(isExpressionValid("1. + 2") == false);
+        REQUIRE(isExpressionValid("(1+2)(3+4)") == false);
+        REQUIRE(isExpressionValid("1 + 2 -") == false);
+        REQUIRE(isExpressionValid("1e5 + 2") == false);
+        REQUIRE(isExpressionValid("1,5 + 2") == false);
+        REQUIRE(isExpressionValid("  ") == false);
+        REQUIRE(isExpressionValid("1 + 2 + -") == false);
+    }
     TEST_CASE("TESTING FLOATING-POINT VALIDATION") {
         CHECK_THROWS(CalculateBrackets("1..2+3")); 
         CHECK_THROWS(CalculateBrackets("3+4.5.6")); 

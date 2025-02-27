@@ -1,5 +1,5 @@
 #include <iostream>
-#include "calc.h"
+#include "calculator_h.h"
 
 using std::cin;
 using std::cout;
@@ -15,27 +15,26 @@ int main() {
         cout << "Введите выражение: ";
         string str;
         std::getline(cin, str);
-
+        
         if (str == "exit") {
             cout << "Выход из программы. До свидания!\n";
             break;
         }
-
         if (str.empty()) {
             cout << "Ошибка: пустой ввод. Попробуйте снова.\n";
             continue;
         }
-
         if (!isExpressionValid(str)) {
-            cout << "Ошибка: некорректное выражение. Убедитесь, что операторы и скобки расставлены правильно.\n";
+            cout << "Error 404!!!!!!!!!\n";
             continue;
-        }
-
-        try {
-            double result = CalculateBrackets(str);
-            cout << "Результат: " << result << "\n";
-        } catch (const std::exception& e) {
-            cout << e.what() << "\n";
+        }else{
+            cout<<"It's mathematical exspression\n";
+            try {
+                double result = CalculateBrackets(str);
+                cout << "Результат: " << result << "\n";
+            } catch (const std::exception& e) {
+                cout << e.what() << "\n";
+            }
         }
     }
 
